@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhot:5432/exospring
+    usurname: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

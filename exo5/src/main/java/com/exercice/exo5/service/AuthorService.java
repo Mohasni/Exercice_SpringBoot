@@ -5,20 +5,20 @@ import com.exercice.exo5.model.Book;
 import com.exercice.exo5.repository.AuthorRepository;
 import com.exercice.exo5.repository.BookRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthorService {
-    private AuthorRepository authorRepository;
-    private  BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
 
     public List<Book> getBook(Long id){
-        Author author = authorRepository.findById(id).orElse(null);
-        return author.getBook();
+        return bookRepository.findByAuthorId(id);
     }
 
     public Author postAuthor(Author author){

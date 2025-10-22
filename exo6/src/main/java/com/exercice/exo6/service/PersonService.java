@@ -1,6 +1,8 @@
 package com.exercice.exo6.service;
 
 import com.exercice.exo6.model.Person;
+import com.exercice.exo6.model.PersonDTO;
+import com.exercice.exo6.model.PersonMapper;
 import com.exercice.exo6.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -16,25 +20,34 @@ import java.util.List;
 public class PersonService {
     private final PersonRepository personRepository;
 
-    public List<Person> getPerson(){
-        return personRepository.findAll();
+    public List<PersonDTO> getPerson(){
+        List<Person> person = personRepository.findAll();
+        List<PersonDTO> personDTO = new ArrayList<>();
+        for (Person p: person){
+            PersonDTO personDTO1 = PersonMapper.toDTO(p);
+            personDTO.add(personDTO1);
+        }
+        return personDTO;
     }
 
-    public List<Person> getPersonById(Long id){
+    public PersonDTO getPersonById(Long id){
         Person person = personRepository.findById(id).orElse(null);
-        person.setId(id);
-        return personRepository.findAll();
+        return PersonMapper.toDTO(person);
     }
 
-    public Person postPerson(Person person){
-        return personRepository.save(person);
+    public PersonDTO postPerson(PersonDTO personDTO){
+        Person person = PersonMapper.toEntity(personDTO);
+        person = personRepository.save(person);
+        return PersonMapper.toDTO(person);
     }
 
-    public Person putPerson(Long id, Person person){
-            Person person1 = personRepository.findById(id).orElse(null);
-            person.setId(person1.getId());
-            return personRepository.save(person);
+    public PersonDTO putPerson(Long id, PersonDTO personDTO){
+        Person person1 = personRepository.findById(id).orElse(null);
+        person1.setName(personDTO.getName());
+        person1.setEmail(personDTO.getEmail());
+        return PersonMapper.toDTO(personRepository.save(person1));
     }
+
 
     public void deletPerson(Long id){
         personRepository.deleteById(id);
